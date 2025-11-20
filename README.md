@@ -1,61 +1,73 @@
-# code-quality-git-hooks
+🚀 1. Install flake8
 
-#🔧 Step 1 — Install flake8
+Run the following command depending on your OS:
 
-Make sure flake8 is installed on your system:
->pip install flake8
+Windows
+py -m pip install flake8
 
-Verify:
->flake8 --version
+Linux / macOS
+pip3 install flake8
 
-#📁 Step 2 — Create a Pre-Commit Hook
 
-Git hooks live inside:
-.yourproject/.git/hooks/
+Verify installation:
 
-Create a file called pre-commit inside that folder:
->touch/vim .git/hooks/pre-commit
+flake8 --version
 
-#✍️ Step 3 — Add flake8 Hook Script
+📁 2. Create the pre-commit hook
 
-Open the file and paste this script:
+Go to your project root and open:
+
+.git/hooks/
+
+
+Create a file named:
+
+pre-commit
+
+✍️ 3. Add the following code inside .git/hooks/pre-commit
 #!/bin/bash
-# Run flake8 only on staged Python files
-# Collect staged .py files
+
+# Get all staged Python files
 files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.py$')
-# If no Python files staged, exit
+
+# If no Python files are staged, exit
 if [ -z "$files" ]; then
     exit 0
 fi
+
 echo "Running flake8 on staged Python files..."
+
+# Run flake8 on the staged files
 flake8 $files
 status=$?
+
 if [ $status -ne 0 ]; then
-    echo "❌ flake8 failed! Please fix the issues before committing."
+    echo "❌ flake8 failed. Fix the errors before committing."
     exit 1
 fi
-echo "✔ flake8 passed successfully."
+
+echo "✔ flake8 passed successfully!"
 exit 0
 
-#🔐 Step 4 — Make the Hook Executable
+🔐 4. Make the hook executable
+Linux / macOS
+chmod +x .git/hooks/pre-commit
 
-Git will not run the script unless it is executable:
->chmod +x .git/hooks/pre-commit
+Windows (Git Bash)
+git update-index --chmod=+x .git/hooks/pre-commit
 
-#🚀 Step 5 — Test Your Setup
+🧪 5. Test the hook
 
-Make a small change, stage the file, and commit:
->git add .
->git commit -m "Test flake8 hook"
+Add a file and try committing:
 
-If code has lint issues → commit will be blocked.
-If clean → commit will succeed.
+git add your_file.py
+git commit -m "Test flake8 hook"
+
+
+If flake8 finds lint issues → commit will stop until fixed.
+If no issues → commit will pass.
 
 🎉 Done!
 
-Your project now automatically enforces flake8 for all staged Python files before every commit.
-
-
-
-
-
+You now have an automated flake8 Python linter that runs every time you commit code.
+This ensures clean, consistent, and error-free Python code moving forward.
